@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("explab")
-@CrossOrigin(origins = "https://hosting-angular-proyecto-ap.web.app")
+@CrossOrigin(origins = "https://hosting-angular-proyecto-ap.web.app")       //"http://localhost:4200")
 public class CExperiencia {
 
     @Autowired
@@ -42,31 +42,34 @@ public class CExperiencia {
             return new ResponseEntity(new Mensaje("Esa experiensia existe"), HttpStatus.BAD_REQUEST);
         }
 
-        Experiencia experiencia = new Experiencia(dtoExp.getNombreE(), dtoExp.getDescripcionE());
+        Experiencia experiencia = new Experiencia(dtoExp.getNombreE(), dtoExp.getDescripcionE(), dtoExp.getImgExp(), dtoExp.getFechaInicioExp(), dtoExp.getFechaFinExp());
         sExperiencia.save(experiencia);
 
         return new ResponseEntity(new Mensaje("Experiencia agregada"), HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") int id, @RequestBody DtoExperiencia dtoExt) {
+    public ResponseEntity<?> update(@PathVariable("id") int id, @RequestBody DtoExperiencia dtoExp) {
         //Validamos si existe el id
         if (!sExperiencia.existsById(id)) {
             return new ResponseEntity(new Mensaje("El id no existe"), HttpStatus.BAD_REQUEST);
         }
 
         //Conpara nombre de experiencias
-        if (sExperiencia.existsByNombreE(dtoExt.getNombreE()) && sExperiencia.getByNombreE(dtoExt.getNombreE()).get().getId() != id) {
+        if (sExperiencia.existsByNombreE(dtoExp.getNombreE()) && sExperiencia.getByNombreE(dtoExp.getNombreE()).get().getId() != id) {
             return new ResponseEntity(new Mensaje("Esa experiencia ya existe"), HttpStatus.BAD_REQUEST);
         }
         //No puede estar vasio
-        if (StringUtils.isBlank(dtoExt.getNombreE())) {
+        if (StringUtils.isBlank(dtoExp.getNombreE())) {
             return new ResponseEntity(new Mensaje("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
         }
 
         Experiencia experiencia = sExperiencia.getOne(id).get();
-        experiencia.setNombreE(dtoExt.getNombreE());
-        experiencia.setDescripcionE((dtoExt.getDescripcionE()));
+        experiencia.setNombreE(dtoExp.getNombreE());
+        experiencia.setDescripcionE(dtoExp.getDescripcionE());
+        experiencia.setImgExp((dtoExp.getImgExp()));
+        experiencia.setFechaInicioExp(dtoExp.getFechaInicioExp());
+        experiencia.setFechaFinExp(dtoExp.getFechaFinExp());
 
         sExperiencia.save(experiencia);
         return new ResponseEntity(new Mensaje("Experiencia actualisada"), HttpStatus.OK);

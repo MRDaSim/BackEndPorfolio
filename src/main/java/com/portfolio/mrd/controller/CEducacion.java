@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping ("educ")
-@CrossOrigin (origins = "https://hosting-angular-proyecto-ap.web.app")
+@CrossOrigin (origins = "https://hosting-angular-proyecto-ap.web.app")  //"http://localhost:4200")
 public class CEducacion {
         
     @Autowired
@@ -44,7 +44,7 @@ public class CEducacion {
                     return new ResponseEntity(new Mensaje("Esta Educacion ya fue cargada"), HttpStatus.BAD_REQUEST);
             }
             
-            Educacion educacion = new Educacion(dtoEdu.getNombreEdu(), dtoEdu.getDescripcionEdu());
+            Educacion educacion = new Educacion(dtoEdu.getNombreEdu(), dtoEdu.getDescripcionEdu(), dtoEdu.getImgEdu(), dtoEdu.getFechaInicioEdu(), dtoEdu.getFechaFinEdu());
             sEducacion.save(educacion);
             
             return new ResponseEntity(new Mensaje("Educacion agregada"), HttpStatus.OK);
@@ -69,7 +69,10 @@ public class CEducacion {
 
         Educacion educacion = sEducacion.getOne(id).get();
         educacion.setNombreEdu(dtoEdu.getNombreEdu());
-        educacion.setDescripcionEdu((dtoEdu.getDescripcionEdu()));
+        educacion.setDescripcionEdu(dtoEdu.getDescripcionEdu());
+        educacion.setImgEdu(dtoEdu.getImgEdu());
+        educacion.setFechaInicioEdu(dtoEdu.getFechaInicioEdu());
+        educacion.setFechaFinEdu(dtoEdu.getFechaFinEdu());
 
         sEducacion.save(educacion);
         return new ResponseEntity(new Mensaje("Experiencia actualisada"), HttpStatus.OK);
